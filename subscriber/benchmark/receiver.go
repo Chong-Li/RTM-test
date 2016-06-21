@@ -7,6 +7,9 @@ import (
 	"time"
 	"io/ioutil"
 	"strconv"	
+	"bytes"
+	"github.com/bitly/go-nsq"
+	//"fmt"
 )
 
 type MessageReceiver interface {
@@ -56,6 +59,7 @@ type LatencyMessageHandler struct {
 	messageCounter   int
 	hasCompleted     bool
 	Channel		string
+	Pub     *nsq.Producer
 	completionLock   sync.Mutex
 }
 
@@ -103,21 +107,60 @@ func (handler *LatencyMessageHandler) HasCompleted() bool {
 // if the message is the last one, otherwise return false.
 func (handler *LatencyMessageHandler) ReceiveMessage(message []byte) bool {
 	now := time.Now().UnixNano()
-	then, _ := binary.Varint(message)
+	//then, _ := binary.Varint(message)
+	var then int64
+	var ch string
+	for i, value:=range bytes.Split(message[24:29], []byte{'\n'}) {
+		if i==0{
+			ch = string(value)		
+		}
+	}
+	then, _ =binary.Varint(message[0:18])
+
+	if ch != "0"{
+		return false	
+	}
+	//then, _ = binary.Varint(message[0:8])
+	/*if handler.messageCounter-0 == handler.NumberOfMessages{
+		handler.messageCounter++
+		if handler.messageCounter == 2560000 {
+			sum := float32(0)
+			for _, latency := range handler.Latencies {
+				sum += latency
+				
+			}
+			avgLatency := float32(sum) / float32(len(handler.Latencies))
+			//time.Sleep(5*time.Second)
+			log.Printf("Mean latency for %d messages: %f ms\n", handler.NumberOfMessages,
+				avgLatency)
+			if handler.Channel == "0" {
+				ioutil.WriteFile((handler.Channel), handler.Results, 0777)
+			}
+		}
+		return false
+	}*/
+	//if handler.messageCounter < 0{
+		//handler.messageCounter++
+		//return false
+	//}
+	//if then != 0 && ch == "100" {
 	if then != 0 {
 		handler.Latencies = append(handler.Latencies, (float32(now-then))/1000/1000)
 		if handler.Channel == "0" {
 			//log.Printf("%d \n", handler.messageCounter);
-			b:=make([]byte,8)
-			binary.PutVarint(b, (now-then))
+		
 			x:=strconv.FormatInt(now-then, 10)
 			handler.Results=append(handler.Results, x...)
 			handler.Results=append(handler.Results, "\n"...)
 		}
 	}
 	handler.messageCounter++
-//	log.Printf(strconv.Itoa(handler.messageCounter))
-	if handler.messageCounter == handler.NumberOfMessages{
+	//log.Printf(strconv.Itoa(handler.messageCounter))
+	/*timeRecv :=make ([]byte, 19)
+	binary.PutVarint(timeRecv, now)
+	copy(message[19:37], timeRecv[:])
+	handler.Pub.PublishAsync("x#ephemeral", message, nil)*/
+	if handler.messageCounter == 13000{
 		sum := float32(0)
 		for _, latency := range handler.Latencies {
 			sum += latency
@@ -128,14 +171,14 @@ func (handler *LatencyMessageHandler) ReceiveMessage(message []byte) bool {
 		log.Printf("Mean latency for %d messages: %f ms\n", handler.NumberOfMessages,
 			avgLatency)
 		if handler.Channel == "0" {
-			ioutil.WriteFile((handler.Channel), handler.Results, 0777)
+			ioutil.WriteFile("ee", handler.Results, 0777)
 		}
 
-		handler.completionLock.Lock()
-		handler.hasCompleted = true
-		handler.completionLock.Unlock()
+		//handler.completionLock.Lock()
+		//handler.hasCompleted = true
+		//handler.completionLock.Unlock()
 
-		return true
+		//return true
 	}
 
 	return false

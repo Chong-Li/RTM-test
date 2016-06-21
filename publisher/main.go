@@ -109,6 +109,7 @@ func main() {
 			}
 
 			go tester.Test()
+			//tester.Test()
 		}
 		//tester := newTester("nsq", true, 10000, 1024, strconv.Itoa(0))
 		//tester.Test()

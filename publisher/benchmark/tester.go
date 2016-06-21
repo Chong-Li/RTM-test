@@ -33,8 +33,8 @@ func (tester Tester) testThroughput() {
 }
 
 func (tester Tester) testLatency() {
-	//receiver := NewReceiveEndpoint(tester, tester.MessageCount)
+	receiver := NewReceiveEndpoint(tester, tester.MessageCount)
 	sender := &SendEndpoint{MessageSender: tester}
 	sender.TestLatency(tester.MessageSize, tester.MessageCount)
-	//receiver.WaitForCompletion()
+	receiver.WaitForCompletion()
 }

@@ -4,6 +4,8 @@ import (
 	"encoding/binary"
 	"log"
 	"time"
+	//"strconv"
+	//"fmt"
 )
 
 type MessageSender interface {
@@ -29,13 +31,19 @@ func (endpoint SendEndpoint) TestThroughput(messageSize int, numberToSend int) {
 
 func (endpoint SendEndpoint) TestLatency(messageSize int, numberToSend int) {
 	start := time.Now().UnixNano()
-	b := make([]byte, messageSize)
+	b := make([]byte, 24)
+	id :=make([]byte, 5)
+	//b:=[]byte{}
+	//time.Sleep(5000*time.Millisecond)
 	for i := 0; i < numberToSend; i++ {
 		binary.PutVarint(b, time.Now().UnixNano())
-		//j := int64(i)
-		//binary.PutVarint(b, j)
+		binary.PutVarint(id, int64(i))
+		//b=append(b, strconv.FormatInt(int64(i), 10)...)
+		copy(b[19:23], id[:])
+		
+		
 		endpoint.MessageSender.Send(b)
-		time.Sleep(5 * time.Millisecond)
+		time.Sleep(4096 * time.Microsecond)
 	}
 
 	stop := time.Now().UnixNano()
