@@ -3,7 +3,7 @@ package mq
 import (
 	"strconv"
 	"github.com/bitly/go-nsq"
-	"github.com/Chong-Li/RTM-test/subscriber/benchmark"
+	"github.com/Chong-Li/RTM-test/subscriber2/benchmark"
 )
 
 type Nsq struct {
@@ -16,14 +16,18 @@ type Nsq struct {
 }
 
 func NewNsq(numberOfMessages int, testLatency bool, channeL string) *Nsq {
-	//topic := "0#ephemeral"
+	//topic := "1#ephemeral"
+	//topic := "0"
 	channel := channeL
-	channel += "m#ephemeral"
+	channel += "n#ephemeral"
 	topic := channel	
 	pub, _ := nsq.NewProducer("localhost:4150", nsq.NewConfig())
+	//if channeL == "1"{
+		//pub, _ = nsq.NewProducer("192.168.1.11:4150", nsq.NewConfig())
+	//}
 	config :=nsq.NewConfig()
 	config.MaxInFlight = 1000
-	config.OutputBufferSize=-1
+	config.OutputBufferSize= -1
 	sub, _ := nsq.NewConsumer(topic, channel, config)
 	var handler benchmark.MessageHandler
 	if testLatency {
@@ -54,7 +58,7 @@ func (n *Nsq) Setup() {
 	}))
 	i, _ := strconv.Atoi(n.raw_channel)
 	if i < 1280 {
-		n.sub.ConnectToNSQD("192.168.1.11:4150")
+		n.sub.ConnectToNSQD("192.168.1.11:4152")
 	} else {
 		n.sub.ConnectToNSQD("localhost:4150")
 	}

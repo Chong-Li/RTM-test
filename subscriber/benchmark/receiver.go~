@@ -160,7 +160,7 @@ func (handler *LatencyMessageHandler) ReceiveMessage(message []byte) bool {
 	binary.PutVarint(timeRecv, now)
 	copy(message[19:37], timeRecv[:])
 	handler.Pub.PublishAsync("x#ephemeral", message, nil)*/
-	if handler.messageCounter == 13000{
+	if handler.messageCounter == 10000{
 		sum := float32(0)
 		for _, latency := range handler.Latencies {
 			sum += latency

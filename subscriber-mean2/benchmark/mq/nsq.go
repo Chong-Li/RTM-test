@@ -3,7 +3,7 @@ package mq
 import (
 	"strconv"
 	"github.com/bitly/go-nsq"
-	"github.com/Chong-Li/RTM-test/subscriber/benchmark"
+	"github.com/Chong-Li/RTM-test/subscriber-mean2/benchmark"
 )
 
 type Nsq struct {
@@ -16,14 +16,16 @@ type Nsq struct {
 }
 
 func NewNsq(numberOfMessages int, testLatency bool, channeL string) *Nsq {
-	//topic := "0#ephemeral"
+	topic := "1#ephemeral"
+	//topic := "0"
 	channel := channeL
-	channel += "m#ephemeral"
-	topic := channel	
+	channel += "#ephemeral"
+	//topic := channel	
 	pub, _ := nsq.NewProducer("localhost:4150", nsq.NewConfig())
 	config :=nsq.NewConfig()
 	config.MaxInFlight = 1000
 	config.OutputBufferSize=-1
+	//config.MaxBackoffDuration=0
 	sub, _ := nsq.NewConsumer(topic, channel, config)
 	var handler benchmark.MessageHandler
 	if testLatency {
@@ -31,7 +33,6 @@ func NewNsq(numberOfMessages int, testLatency bool, channeL string) *Nsq {
 			NumberOfMessages: numberOfMessages,
 			Latencies:        []float32{},
 			Channel:	channeL,
-			Pub:		pub,
 		}
 	} else {
 		handler = &benchmark.ThroughputMessageHandler{NumberOfMessages: numberOfMessages}
@@ -54,7 +55,7 @@ func (n *Nsq) Setup() {
 	}))
 	i, _ := strconv.Atoi(n.raw_channel)
 	if i < 1280 {
-		n.sub.ConnectToNSQD("192.168.1.11:4150")
+		n.sub.ConnectToNSQD("172.16.21.6:4152")
 	} else {
 		n.sub.ConnectToNSQD("localhost:4150")
 	}

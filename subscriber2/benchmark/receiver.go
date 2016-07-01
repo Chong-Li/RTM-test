@@ -117,7 +117,7 @@ func (handler *LatencyMessageHandler) ReceiveMessage(message []byte) bool {
 	}
 	then, _ =binary.Varint(message[0:18])
 
-	if ch != "0"{
+	if ch != "1"{
 		return false	
 	}
 	//then, _ = binary.Varint(message[0:8])
@@ -146,7 +146,7 @@ func (handler *LatencyMessageHandler) ReceiveMessage(message []byte) bool {
 	//if then != 0 && ch == "100" {
 	if then != 0 {
 		handler.Latencies = append(handler.Latencies, (float32(now-then))/1000/1000)
-		if handler.Channel == "0" {
+		if handler.Channel == "1" {
 			//log.Printf("%d \n", handler.messageCounter);
 		
 			x:=strconv.FormatInt(now-then, 10)
@@ -155,11 +155,11 @@ func (handler *LatencyMessageHandler) ReceiveMessage(message []byte) bool {
 		}
 	}
 	handler.messageCounter++
-	//log.Printf(strconv.Itoa(handler.messageCounter))
 	/*timeRecv :=make ([]byte, 19)
 	binary.PutVarint(timeRecv, now)
 	copy(message[19:37], timeRecv[:])
-	handler.Pub.PublishAsync("x#ephemeral", message, nil)*/
+	handler.Pub.PublishAsync("y#ephemeral", message, nil)*/
+	//log.Printf(strconv.Itoa(handler.messageCounter))
 	if handler.messageCounter == 13000{
 		sum := float32(0)
 		for _, latency := range handler.Latencies {
@@ -168,10 +168,10 @@ func (handler *LatencyMessageHandler) ReceiveMessage(message []byte) bool {
 		}
 		avgLatency := float32(sum) / float32(len(handler.Latencies))
 		//time.Sleep(5*time.Second)
-		log.Printf("Mean latency for %d messages: %f ms\n", handler.NumberOfMessages,
+		log.Printf("Mean 2 latency for %d messages: %f ms\n", handler.NumberOfMessages,
 			avgLatency)
-		if handler.Channel == "0" {
-			ioutil.WriteFile("ee", handler.Results, 0777)
+		if handler.Channel == "1" {
+			ioutil.WriteFile("ee2", handler.Results, 0777)
 		}
 
 		//handler.completionLock.Lock()
