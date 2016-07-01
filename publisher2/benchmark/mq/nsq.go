@@ -3,7 +3,7 @@ package mq
 import (
 	//"strconv"
 	"github.com/bitly/go-nsq"
-	"github.com/Chong-Li/RTM-test/publisher/benchmark"
+	"github.com/Chong-Li/RTM-test/publisher2/benchmark"
 	//"encoding/binary"
 	//"fmt"
 )
@@ -17,20 +17,28 @@ type Nsq struct {
 }
 
 func NewNsq(numberOfMessages int, testLatency bool, channeL string) *Nsq {
-	//topic := "0#ephemeral"
-	channel := channeL
-	channel += "m#ephemeral"
-	topic := channel
+	//topic := "1#ephemeral"
+	//topic := "0"	
+	//channel := channeL
+	//i, _ := strconv.Atoi(channel)
+	//channel += "#ephemeral"
+	topic := channeL
+	topic +="n#ephemeral"
 	
+	//config.MaxInFlight = 1000
+	//config.OutputBufferSize=-1
         pub, _ := nsq.NewProducer("localhost:4150", nsq.NewConfig())
 //	if i >= 128 {
 //		pub, _ = nsq.NewProducer("192.168.1.11:4150", config)
 //	}
-
-	config := nsq.NewConfig()
-	config.MaxInFlight = 1000
-	config.OutputBufferSize=-1
-	sub, _ := nsq.NewConsumer("111xxx", "xxx", config)
+	sub, _ := nsq.NewConsumer("111xxx", "xxx", nsq.NewConfig())
+	/*if channeL == "1" {
+		config := nsq.NewConfig()
+		config.MaxInFlight = 1000
+		config.OutputBufferSize=-1
+		sub, _ = nsq.NewConsumer("y#ephemeral", topic, config)
+	}*/
+		
 
 	var handler benchmark.MessageHandler
 	if testLatency {
@@ -53,11 +61,13 @@ func NewNsq(numberOfMessages int, testLatency bool, channeL string) *Nsq {
 }
 
 func (n *Nsq) Setup() {
-	/*n.sub.AddHandler(nsq.HandlerFunc(func(message *nsq.Message) error {
-		n.handler.ReceiveMessage(message.Body)
-		return nil
-	}))
-	n.sub.ConnectToNSQD("localhost:4150")*/
+	/*if n.channel == "1" {
+		n.sub.AddHandler(nsq.HandlerFunc(func(message *nsq.Message) error {
+			n.handler.ReceiveMessage(message.Body)
+			return nil
+		}))
+		n.sub.ConnectToNSQD("localhost:4150")
+	}*/
 }
 
 func (n *Nsq) Teardown() {

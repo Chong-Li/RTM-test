@@ -5,8 +5,6 @@ import (
 	"log"
 	"sync"
 	"time"
-	"io/ioutil"
-	"strconv"
 )
 
 type MessageReceiver interface {

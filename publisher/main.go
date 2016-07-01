@@ -100,15 +100,16 @@ func main() {
 		os.Args[0])
 
 		runtime.GOMAXPROCS(runtime.NumCPU())
-
-		for i:=0; i<1; i++ {
-			tester := newTester("nsq", true, 10000, 1024, strconv.Itoa(i))
+		num, _ := strconv.Atoi(os.Args[1])
+		for i:=0; i< num; i++ {
+			tester := newTester("nsq", true, 13000, 1024, strconv.Itoa(i))
 			if tester == nil {
 				log.Println(usage)
 				os.Exit(1)
 			}
 
 			go tester.Test()
+			//tester.Test()
 		}
 		//tester := newTester("nsq", true, 10000, 1024, strconv.Itoa(0))
 		//tester.Test()

@@ -36,9 +36,9 @@ func (endpoint SendEndpoint) TestLatency(messageSize int, numberToSend int) {
 	//b:=[]byte{}
 	//time.Sleep(5000*time.Millisecond)
 	for i := 0; i < numberToSend; i++ {
-		if i==1{
-			time.Sleep(5* time.Second)
-		}
+		//if i==1{
+			//time.Sleep(5* time.Second)
+		//}
 		binary.PutVarint(b, time.Now().UnixNano())
 		binary.PutVarint(id, int64(i))
 		//b=append(b, strconv.FormatInt(int64(i), 10)...)

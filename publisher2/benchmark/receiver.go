@@ -102,13 +102,12 @@ func (handler *LatencyMessageHandler) HasCompleted() bool {
 // If it's the last message, compute the average latency and print it out. Return true
 // if the message is the last one, otherwise return false.
 func (handler *LatencyMessageHandler) ReceiveMessage(message []byte) bool {
-	if handler.Channel != "0" {
+	if handler.Channel != "1" {
 		return false
 	}
 	now := time.Now().UnixNano()
 	then1, _ := binary.Varint(message[0:18])
 	then2, _ := binary.Varint(message[19:37])
-
 	// TODO: Figure out why nanomsg and ZeroMQ sometimes receive empty messages.
 	if then1 != 0 {
 		handler.Latencies = append(handler.Latencies, (float32(now-then1))/1000/1000)
@@ -121,6 +120,7 @@ func (handler *LatencyMessageHandler) ReceiveMessage(message []byte) bool {
 	}
 
 	handler.messageCounter++
+	
 	if handler.messageCounter == handler.NumberOfMessages {
 		sum := float32(0)
 		for _, latency := range handler.Latencies {
@@ -130,7 +130,7 @@ func (handler *LatencyMessageHandler) ReceiveMessage(message []byte) bool {
 		log.Printf("Mean latency for %d messages: %f ms\n", handler.NumberOfMessages,
 			avgLatency)
 
-		ioutil.WriteFile("ret1", handler.Results, 0777)
+		ioutil.WriteFile("ret2", handler.Results, 0777)
 		//handler.completionLock.Lock()
 		//handler.hasCompleted = true
 		//handler.completionLock.Unlock()

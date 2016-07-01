@@ -8,8 +8,8 @@ import (
 	"time"
 	"runtime"
 
-	"github.com/Chong-Li/RTM-test/publisher/benchmark"
-	"github.com/Chong-Li/RTM-test/publisher/benchmark/mq"
+	"github.com/Chong-Li/RTM-test/publisher2/benchmark"
+	"github.com/Chong-Li/RTM-test/publisher2/benchmark/mq"
 )
 
 func newTester(subject string, testLatency bool, msgCount, msgSize int, channel string) *benchmark.Tester {
@@ -100,9 +100,14 @@ func main() {
 		os.Args[0])
 
 		runtime.GOMAXPROCS(runtime.NumCPU())
+		
 		num, _ := strconv.Atoi(os.Args[1])
-		for i:=0; i< num; i++ {
-			tester := newTester("nsq", true, 15000, 1024, strconv.Itoa(i))
+
+		for i:=1; i< num; i++ {
+			//tester := newTester("nsq", true, 10000000, 4096, strconv.Itoa(i))
+			//if i == 1 {
+				tester := newTester("nsq", true, 13000, 1024, strconv.Itoa(i))
+			//}
 			if tester == nil {
 				log.Println(usage)
 				os.Exit(1)
