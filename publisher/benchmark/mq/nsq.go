@@ -72,7 +72,7 @@ func (n *Nsq) Send(message []byte) {
 	//message=append(message, ch)
 	message=append(message, n.channel...)
 	message=append(message, "\n"...)
-	b:=make([]byte, 1024-len(message))
+	b:=make([]byte, 512-len(message))
 	//fmt.Printf("~~~~~~~~~~~~~~%d\n", len(message))
 	//fmt.Println(message)
 	message=append(message, b...)
