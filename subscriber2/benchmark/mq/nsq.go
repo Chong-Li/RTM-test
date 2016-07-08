@@ -27,7 +27,7 @@ func NewNsq(numberOfMessages int, testLatency bool, channeL string) *Nsq {
 	//}
 	config :=nsq.NewConfig()
 	config.MaxInFlight = 1000
-	config.OutputBufferSize= -1
+	config.OutputBufferSize= 8192
 	sub, _ := nsq.NewConsumer(topic, channel, config)
 	var handler benchmark.MessageHandler
 	if testLatency {
@@ -58,7 +58,7 @@ func (n *Nsq) Setup() {
 	}))
 	i, _ := strconv.Atoi(n.raw_channel)
 	if i < 1280 {
-		n.sub.ConnectToNSQD("192.168.1.11:4152")
+		n.sub.ConnectToNSQD("10.0.0.26:4150")
 	} else {
 		n.sub.ConnectToNSQD("localhost:4150")
 	}
