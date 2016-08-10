@@ -27,7 +27,7 @@ func NewNsq(numberOfMessages int, testLatency bool, channeL string) *Nsq {
 	
 	//config.MaxInFlight = 1000
 	//config.OutputBufferSize=-1
-        pub, _ := nsq.NewProducer("localhost:4150", nsq.NewConfig())
+        pub, _ := nsq.NewProducer("localhost:4152", nsq.NewConfig())
 //	if i >= 128 {
 //		pub, _ = nsq.NewProducer("192.168.1.11:4150", config)
 //	}
