@@ -106,6 +106,9 @@ func (handler *LatencyMessageHandler) HasCompleted() bool {
 // If it's the last message, compute the average latency and print it out. Return true
 // if the message is the last one, otherwise return false.
 func (handler *LatencyMessageHandler) ReceiveMessage(message []byte) bool {
+	if handler.Channel != "1" {
+		return false;
+	}
 	now := time.Now().UnixNano()
 	//then, _ := binary.Varint(message)
 	var then int64
