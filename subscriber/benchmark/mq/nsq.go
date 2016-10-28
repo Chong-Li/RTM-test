@@ -22,7 +22,7 @@ func NewNsq(numberOfMessages int, testLatency bool, channeL string) *Nsq {
 	topic := channel	
 	pub, _ := nsq.NewProducer("localhost:4150", nsq.NewConfig())
 	config :=nsq.NewConfig()
-	config.MaxInFlight = 1000
+	config.MaxInFlight = 20000
 	config.OutputBufferSize=-1
 	sub, _ := nsq.NewConsumer(topic, channel, config)
 	var handler benchmark.MessageHandler

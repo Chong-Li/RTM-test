@@ -110,7 +110,7 @@ func (handler *LatencyMessageHandler) ReceiveMessage(message []byte) bool {
 	//then, _ := binary.Varint(message)
 	var then int64
 	var ch string
-	for i, value:=range bytes.Split(message[24:29], []byte{'\n'}) {
+	for i, value:=range bytes.Split(message[27:32], []byte{'\n'}) {
 		if i==0{
 			ch = string(value)		
 		}
@@ -144,7 +144,7 @@ func (handler *LatencyMessageHandler) ReceiveMessage(message []byte) bool {
 		//return false
 	//}
 	//if then != 0 && ch == "100" {
-	if then != 0 {
+	if then != 0 && handler.messageCounter%10 == 0 {
 		handler.Latencies = append(handler.Latencies, (float32(now-then))/1000/1000)
 		if handler.Channel == "0" {
 			//log.Printf("%d \n", handler.messageCounter);
@@ -160,7 +160,7 @@ func (handler *LatencyMessageHandler) ReceiveMessage(message []byte) bool {
 	binary.PutVarint(timeRecv, now)
 	copy(message[19:37], timeRecv[:])
 	handler.Pub.PublishAsync("x#ephemeral", message, nil)*/
-	if handler.messageCounter == 13000{
+	if handler.messageCounter/10 == 13000 && handler.messageCounter%10 ==1{
 		sum := float32(0)
 		for _, latency := range handler.Latencies {
 			sum += latency
@@ -174,11 +174,11 @@ func (handler *LatencyMessageHandler) ReceiveMessage(message []byte) bool {
 			ioutil.WriteFile("ee", handler.Results, 0777)
 		}
 
-		//handler.completionLock.Lock()
-		//handler.hasCompleted = true
-		//handler.completionLock.Unlock()
+	//	handler.completionLock.Lock()
+	//	handler.hasCompleted = true
+	//	handler.completionLock.Unlock()
 
-		//return true
+	//	return true
 	}
 
 	return false

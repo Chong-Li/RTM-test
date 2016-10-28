@@ -121,7 +121,7 @@ func (handler *LatencyMessageHandler) ReceiveMessage(message []byte) bool {
 	}
 
 	handler.messageCounter++
-	if handler.messageCounter == handler.NumberOfMessages {
+	if handler.messageCounter >= handler.NumberOfMessages {
 		sum := float32(0)
 		for _, latency := range handler.Latencies {
 			sum += latency
