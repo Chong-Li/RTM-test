@@ -1,0 +1,14 @@
+Validate impact of rate
+(Vary nemda)
+
+broker.CPUcores = 1
+#publisher = 1
+batch = 1
+
+nemda (us)      CPU
+1000		4.3%
+50		37.0%
+20		50.2%
+10		59%
+
+latency has no big change
