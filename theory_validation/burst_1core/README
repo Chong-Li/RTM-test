@@ -1,0 +1,17 @@
+Validate the impact of burst
+(Vary # synchronized publishers)
+
+broker.CPUcores = 1
+topic-level total rate = 1k/s
+all publishers fully synchronized
+msg size =128 bytes
+
+CPU:
+1 pub: 5.3%
+20 pub: 2.7%
+100 pub: 2.7%
+200 pub: 3.0%
+500 pub: 3.7%
+1000 pub: 4.7%
+
+

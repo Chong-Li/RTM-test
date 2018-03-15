@@ -1,0 +1,18 @@
+Validate the impact of rate
+(Vary sending period)
+
+broker.CPUcores = 2
+#publishers = 10, fully synchronized
+msg size = 128 bytes
+
+Sending period (us)     CPU
+200			154%
+180			162%
+170			168%
+160			172%
+150			178%
+140			184%
+130			191%
+125			193%
+120			196%
+110			198%
